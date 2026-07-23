@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bassino & Aletta</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(rgba(255,240,245,0.85), rgba(255,240,245,0.85)), 
+                  url('maialino.jpg') center/cover no-repeat fixed;
+      margin: 0;
+      padding: 20px 0;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    header h1 { 
+      font-size: 2.5rem; 
+      color: #e91e63; 
+    }
+
+    .slider-container {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      scrollbar-width: none;
+    }
+    .slider-container::-webkit-scrollbar { display: none; }
+
+    .event {
+      min-width: 100%;
+      max-width: 100%;
+      scroll-snap-align: center;
+      background: rgba(255,255,255,0.95);
+      border-radius: 25px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+    .event-date {
+      font-size: 1.35rem;
+      font-weight: bold;
+      color: #e91e63;
+      margin-bottom: 12px;
+    }
+    h2 { 
+      color: #c2185b; 
+      margin: 15px 0; 
+    }
+    .characters {
+      font-size: 4rem;
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .bassino { font-size: 4.6rem; }
+
+    .nav-arrows {
+      text-align: center;
+      margin: 20px 0;
+      font-size: 2.2rem;
+      color: #e91e63;
+    }
+    .nav-arrows span {
+      margin: 0 35px;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 1.5rem;
+      color: #e91e63;
+      font-weight: bold;
+    }
+
+    .heart {
+      position: fixed;
+      font-size: 2rem;
+      pointer-events: none;
+      z-index: 1000;
+      animation: heartBurst 1.3s forwards;
+    }
+    @keyframes heartBurst {
+      0% { transform: scale(0.4) translateY(0); opacity: 1; }
+      100% { transform: scale(1.8) translateY(-180px); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Bassino & Aletta</h1>
+  </header>
+
+  <div class="slider-container" id="slider"></div>
+
+  <div class="nav-arrows">
+    ← &nbsp;&nbsp;&nbsp; Scorri &nbsp;&nbsp;&nbsp; →
+  </div>
+
+  <footer>
+    BUON ANNIVERSARIO A NOI ALETTA
+  </footer>
+
+  <script>
+    const eventi = [
+      { data: "24/07/2025", titolo: "Il primo bacio", testo: "ci siamo dati il primo bacio in macchina, lei mi ha detto “vorrei rendere la situazione strana” e mi ha detto “mi piaci più di un amico” e poi l’ho baciata" },
+      { data: "14/08/2025", titolo: "prima volta al cinema", testo: "abbiamo visto il nostro primo film al cinema, Bring Her Back, te lo ricordi? era più triste che horror 😔" },
+      { data: "14/08/2025", titolo: "il primo ti amo", testo: "per la prima volta dopo 21 giorni che usciavamo, ti ho detto “ti amo” e tu mi hai iniziato a chiedere cosa significasse amare una persona, me lo ricordo benissimo quel giorno perché mi chiedevi tante cose e sembravi confusa 🤣" },
+      { data: "17/08/2025", titolo: "prima stream su Discord", testo: "abbiamo visto su Discord un anime, Takopi’s Original Sin e i primi episodi erano tristi, tutto l’anime fu triste ma l’ultima scena del primo ep.. e poi dopo ti ho mandato il video di Lulu con il suo amico peloso mentre glielo strappo via e mi guarda male🤣" },
+      { data: "10/09/2025", titolo: "la prima delusione e il mio primo pianto", testo: "quel giorno a Mantova è stato bellissimo finché non l’ho rovinato con un mio commento in macchina al ritorno, “non siamo compatibili” dissi parlando dei nostri gusti sulle Monster, ci sei rimasta malissima ed io ci ho pianto tanto una volta tornato, ero arrabbiatissimo con me stesso" },
+      { data: "25/09/2025", titolo: "il tuo primo ti amo", testo: "mi hai detto per la prima volta ti amo dopo 66 giorni in cui stavamo insieme, il mio cuore ha battuto all’impazzata ed ero felicissimo, non riesco a descrivere la sensazione che provai quel giorno" },
+      { data: "10/12/2025", titolo: "la prima vacanza e la prima volta", testo: "siamo andati a Castelnuovo Magra, dove ci stava il gatto arancione e dove Alessandro voleva scammarti chiedendoti 30 euro per la coperta.. è stato anche il giorno in cui l’abbiamo fatto per la prima volta, inizialmente non collaborava il mio amico ma poi è stato troppo troppo bello" },
+      { data: "05/05/2026", titolo: "tante ore da Titan", testo: "quella mattinata è stata bellissima, siamo stati prima a Monteveglio Alto e poi abbiamo passato almeno 2 ore da Titan a chiacchierare e provare biscottini, mi ero divertito molto" }
+    ];
+
+    const slider = document.getElementById('slider');
+
+    eventi.forEach(ev => {
+      const div = document.createElement('div');
+      div.className = 'event';
+      div.innerHTML = `
+        <div class="event-date">${ev.data}</div>
+        <h2>${ev.titolo}</h2>
+        <div class="characters">
+          <span class="bassino">🧍‍♂️</span>
+          <span>🫀</span>
+          <span>🧍‍♀️</span>
+        </div>
+        <p>${ev.testo}</p>
+      `;
+      slider.appendChild(div);
+    });
+
+    function createHeartBurst() {
+      for (let i = 0; i < 20; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.textContent = '🫀';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.top = (60 + Math.random() * 30) + 'vh';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1400);
+      }
+    }
+
+    let lastScroll = 0;
+    slider.addEventListener('scroll', () => {
+      const now = Date.now();
+      if (now - lastScroll > 500) {
+        createHeartBurst();
+        lastScroll = now;
+      }
+    });
+  </script>
+</body>
+</html>
