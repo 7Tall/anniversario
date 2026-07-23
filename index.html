@@ -7,21 +7,48 @@
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(rgba(255,240,245,0.9), rgba(255,240,245,0.9)), 
-                  url('./maialino.jpg') center/cover no-repeat fixed;
+      background: linear-gradient(rgba(255,240,245,0.88), rgba(255,240,245,0.88)), 
+                  url('maialino.jpg') center/cover no-repeat fixed;
       margin: 0;
-      padding: 20px 0;
+      padding: 0;
       overflow-x: hidden;
       position: relative;
+      height: 100vh;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 30px;
+    /* Schermata Password */
+    #password-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,240,245,0.95);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
     }
-    header h1 { 
-      font-size: 2.5rem; 
-      color: #e91e63; 
+    #password-screen h1 {
+      color: #e91e63;
+      margin-bottom: 30px;
+      font-size: 2.2rem;
+    }
+    input {
+      padding: 15px 20px;
+      font-size: 1.3rem;
+      border: 2px solid #e91e63;
+      border-radius: 50px;
+      width: 280px;
+      text-align: center;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 40px;
+      font-size: 1.2rem;
+      background: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
     }
 
     .slider-container {
@@ -45,23 +72,9 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.15);
       text-align: center;
     }
-    .event-date {
-      font-size: 1.35rem;
-      font-weight: bold;
-      color: #e91e63;
-      margin-bottom: 12px;
-    }
-    h2 { 
-      color: #c2185b; 
-      margin: 15px 0; 
-    }
-    .characters {
-      font-size: 4rem;
-      margin: 20px 0;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
+    .event-date { font-size: 1.35rem; font-weight: bold; color: #e91e63; margin-bottom: 12px; }
+    h2 { color: #c2185b; margin: 15px 0; }
+    .characters { font-size: 4rem; margin: 20px 0; display: flex; justify-content: center; gap: 20px; }
     .bassino { font-size: 4.6rem; }
 
     .nav-arrows {
@@ -70,10 +83,7 @@
       font-size: 2.2rem;
       color: #e91e63;
     }
-    .nav-arrows span {
-      margin: 0 35px;
-      cursor: pointer;
-    }
+    .nav-arrows span { margin: 0 35px; cursor: pointer; }
 
     footer {
       text-align: center;
@@ -97,19 +107,30 @@
   </style>
 </head>
 <body>
-  <header>
-    <h1>Bassino & Aletta</h1>
-  </header>
 
-  <div class="slider-container" id="slider"></div>
-
-  <div class="nav-arrows">
-    ← &nbsp;&nbsp;&nbsp; Scorri &nbsp;&nbsp;&nbsp; →
+  <!-- Schermata Password -->
+  <div id="password-screen">
+    <h1>Accedi ai ricordi</h1>
+    <input type="password" id="password-input" placeholder="Inserisci la password">
+    <button onclick="checkPassword()">Entra</button>
   </div>
 
-  <footer>
-    BUON ANNIVERSARIO A NOI ALETTA
-  </footer>
+  <!-- Contenuto principale (nascosto all'inizio) -->
+  <div id="main-content" style="display: none;">
+    <header>
+      <h1>Bassino & Aletta</h1>
+    </header>
+
+    <div class="slider-container" id="slider"></div>
+
+    <div class="nav-arrows">
+      ← &nbsp;&nbsp;&nbsp; Scorri &nbsp;&nbsp;&nbsp; →
+    </div>
+
+    <footer>
+      BUON ANNIVERSARIO A NOI ALETTA
+    </footer>
+  </div>
 
   <script>
     const eventi = [
@@ -123,8 +144,18 @@
       { data: "05/05/2026", titolo: "tante ore da Titan", testo: "quella mattinata è stata bellissima, siamo stati prima a Monteveglio Alto e poi abbiamo passato almeno 2 ore da Titan a chiacchierare e provare biscottini, mi ero divertito molto" }
     ];
 
-    const slider = document.getElementById('slider');
+    function checkPassword() {
+      const input = document.getElementById('password-input').value.trim();
+      if (input.toLowerCase() === "lulu") {
+        document.getElementById('password-screen').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+      } else {
+        alert("Password sbagliata 😔");
+      }
+    }
 
+    // Genera gli eventi
+    const slider = document.getElementById('slider');
     eventi.forEach(ev => {
       const div = document.createElement('div');
       div.className = 'event';
@@ -141,6 +172,7 @@
       slider.appendChild(div);
     });
 
+    // Esplosione cuori
     function createHeartBurst() {
       for (let i = 0; i < 20; i++) {
         const heart = document.createElement('div');
